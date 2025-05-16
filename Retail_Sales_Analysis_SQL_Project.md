@@ -92,37 +92,59 @@ WHERE	 transactions_id IS NULL
 SQL queries to answer business questions:
 
 ```sql
--- 1. Sales on '2022-11-05'
-SELECT * FROM retail_sales WHERE sale_date = '2022-11-05';
+-- 1. **Write a SQL query to retrieve all columns for sales made on '2022-11-05**:
+```sql
+SELECT *
+FROM retail_sales
+WHERE sale_date = '2022-11-05';
 
--- 2. Clothing sales > 4 quantity in Nov-2022
-SELECT * FROM public.retail_sales
-WHERE category = 'Clothing' AND quantity >= 4 AND TO_CHAR(sale_date, 'YYYY-MM') = '2022-11';
+-- 2. **Write a SQL query to retrieve all transactions where the category is 'Clothing' and the quantity sold is more than 4 in the month of Nov-2022**:
+```sql
+SELECT *
+FROM public.retail_sales
+WHERE category = 'Clothing'
+AND quantity >= 4
+AND TO_CHAR(sale_date, 'YYYY-MM') = '2022-11';
 
--- 3. Total sales per category
-SELECT category, SUM(total_sale) FROM public.retail_sales GROUP BY category;
+-- 3. **Write a SQL query to calculate the total sales (total_sale) for each category.**:
+```sql
+SELECT category, SUM(total_sale)
+FROM public.retail_sales
+GROUP BY category;
 
--- 4. Average age for 'Beauty' category
-SELECT AVG(age) FROM public.retail_sales WHERE category = 'Beauty';
+-- 4. **Write a SQL query to find the average age of customers who purchased items from the 'Beauty' category.**:
+```sql
+SELECT AVG(age)
+FROM public.retail_sales
+WHERE category = 'Beauty';
 
--- 5. Transactions > 1000 in total sale
-SELECT * FROM public.retail_sales WHERE total_sale > 1000;
+-- 5. **Write a SQL query to find all transactions where the total_sale is greater than 1000.**:
+```sql
+SELECT *
+FROM public.retail_sales
+WHERE total_sale > 1000;
 
--- 6. Transactions by gender in each category
-SELECT category, gender, count(*) FROM public.retail_sales GROUP BY gender, category;
+-- 6. **Write a SQL query to find the total number of transactions (transaction_id) made by each gender in each category.**:
+SELECT category, gender, count(*)
+FROM public.retail_sales
+GROUP BY gender, category;
 
--- 7. Average monthly sale
-SELECT EXTRACT(YEAR FROM sale_date) as year, EXTRACT(MONTH FROM sale_date) as month,
-AVG(total_sale) as avg_sales FROM public.retail_sales GROUP BY year, month ORDER BY year, month ASC;
+-- 7. **Write a SQL query to calculate the average sale for each month**:
+SELECT
+EXTRACT(YEAR FROM sale_date) as year, EXTRACT(MONTH FROM sale_date) as month, AVG(total_sale) as avg_sales
+FROM public.retail_sales
+GROUP BY year, month
+ORDER BY year, month ASC;
 
--- 8. Top 5 customers by total sales
+-- 8. **Top 5 customers by total sales**:
 SELECT customer_id, SUM(total_sale) FROM public.retail_sales
 GROUP BY customer_id ORDER BY SUM(total_sale) DESC LIMIT 5;
 
 -- 9. Unique customers per category
-SELECT category, COUNT(DISTINCT customer_id) as cnt_unique_cs FROM retail_sales GROUP BY category;
+SELECT category, COUNT(DISTINCT customer_id) as cnt_unique_cs
+FROM retail_sales GROUP BY category;
 
--- 10. Orders by shift (Morning, Afternoon, Evening)
+-- 10. **Write a SQL query to create each shift and number of orders (Example Morning <12, Afternoon Between 12 & 17, Evening >17)**:
 WITH hourly_sale AS (
 SELECT *, CASE
 WHEN EXTRACT(HOUR FROM sale_time) < 12 THEN 'Morning'
